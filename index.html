@@ -25,13 +25,38 @@
             var data = response.getDataTable();
             var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             var options = {
-                chart: {
-                    title: 'Box Office Earnings in First Two Weeks of Opening',
-                    subtitle: 'in millions of dollars (USD)'
+                title: 'StorageNode Stats',
+                series: {
+                    0: { targetAxisIndex: 0 }, // Used TB left
+                    1: { targetAxisIndex: 0 }, // Total TB left
+                    2: { targetAxisIndex: 1 }, // Payout $ right
                 },
-                width: 900,
-                height: 500
+                axes: {
+                    y: {
+                        0: {
+                            label: 'TB',
+                            format: '#,### TB'
+                        },
+                        1: {
+                            label: '$',
+                            format: '#,## $'
+                        }
+                    }
+                },
+                width: 1000,
+                height: 600,
+                hAxis: {
+                    format: 'dd-MM-yyyy HH:mm'
+                },
+                //vAxis: {
+                //    format: '#,### TB'
+                //}
+
             };
+            var dt_formatter = new google.visualization.DateFormat({
+                pattern: "dd-MM-yyyy HH:mm"
+            });
+            dt_formatter.format(data, 0);
             chart.draw(data, options);
         }
     </script>

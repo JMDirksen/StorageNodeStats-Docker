@@ -10,7 +10,7 @@ while true; do
 
   # Hourly timer
   while [[ ! $(date +%M) -eq 00 ]]; do sleep 10; done
-  echo "Time: $(date +%H:%M:%S)"
+  echo "Time: $(date -Iminutes)"
 
   # Reset variables
   totalavailable=0
@@ -34,7 +34,7 @@ while true; do
   done
 
   # Output formatting
-  datetime=$(date "+%Y-%m-%d %H:%M")
+  datetime=$(date -Iminutes)
   totalused=$(jq -n "$totalused/1000000000|round/1000")
   totalavailable=$(jq -n "$totalavailable/1000000000|round/1000")
   totalpayout=$(jq -n "$totalpayout/100")
