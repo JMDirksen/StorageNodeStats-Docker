@@ -4,13 +4,21 @@ csv=/usr/local/apache2/htdocs/stats.csv
 [ ! -s $csv ] && echo "DateTime,Used,Total,Payout" > $csv
 
 # Split hosts string
-HOSTS=$(echo $HOSTS | tr ",;" "\n")
+HOSTS=$(echo $HOSTS | tr " ,;" "\n")
+sleep 5s
+echo "Checking hosts..."
+for host in $HOSTS; do
+  api="http://$host/api"
+  sno="$api/sno/"
+  version=$(curl -s "$sno" | jq -r ".version")
+  echo "Host '$host' running version: $version."
+done
 
 while true; do
 
   # Hourly timer
-  while [[ ! $(date +%M) -eq 00 ]]; do sleep 10; done
-  echo "Time: $(date -Iminutes)"
+  while [ ! $(date +%M) -eq 00 ]; do sleep 10; done
+  echo "Time: $(date +%H:%M:%S)"
 
   # Reset variables
   totalavailable=0
@@ -34,7 +42,7 @@ while true; do
   done
 
   # Output formatting
-  datetime=$(date -Iminutes)
+  datetime=$(date "+%Y-%m-%d %H:%M")
   totalused=$(jq -n "$totalused/1000000000|round/1000")
   totalavailable=$(jq -n "$totalavailable/1000000000|round/1000")
   totalpayout=$(jq -n "$totalpayout/100")
@@ -44,7 +52,7 @@ while true; do
 
   # Remove extra records from csv
   count=$(cat $csv | wc -l)
-  diff=$(($count-1440))   # 2 months (2 * 30 * 24)
+  diff=$(($count-1440))   # ~2 months (2 * 30 * 24)
   ln=0
   cat $csv | while read line; do
     ln=$(($ln+1))
