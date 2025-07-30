@@ -52,7 +52,7 @@ while true; do
 
   # Remove extra records from csv
   count=$(cat $csv | wc -l)
-  diff=$(($count-1440))   # ~2 months (2 * 30 * 24)
+  diff=$(($count-2160))   # ~3 months (3 * 30 * 24)
   ln=0
   cat $csv | while read line; do
     ln=$(($ln+1))
