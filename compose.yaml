@@ -1,0 +1,8 @@
+services:
+  storagenodestats:
+    build: .
+    container_name: storagenodestats
+    environment:
+      - HOSTS=hostname1:14002,hostname2:14002
+      - WEBSTORE=https://webstore.domain.com/yoursecretkey
+    restart: unless-stopped
